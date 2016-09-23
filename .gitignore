@@ -95,3 +95,4 @@ ENV/
 local.sh
 .avoscloud
 .DS_Store
+.avoscloud/

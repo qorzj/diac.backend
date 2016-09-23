@@ -23,6 +23,8 @@ def translate_baidu(word):
     count.add(trans_result)
     count.add(trans_result)
 
+    if not json_text_double:
+        return []
     obj2 = json.loads(json_text_double)
 
     for case in obj2:
