@@ -23,6 +23,11 @@ def translate_baidu(word):
     count.add(trans_result)
     count.add(trans_result)
 
+    tag_result = obj['liju_result']['tag']
+    for tag in tag_result:
+        count.add(tag)
+        count.add(tag)
+
     if not json_text_double:
         return []
     obj2 = json.loads(json_text_double)
@@ -32,10 +37,11 @@ def translate_baidu(word):
         for segs in case[1]:
             if segs[3] == 1:
                 tmp += segs[0]
-        tmp = tmp.replace(u'。', '').replace(u'，', '').replace(' ', '')
+        tmp = tmp.replace(u'。', '').replace(u'，', '').replace(' ',
+                '').replace(',', '')
         count.add(tmp)
 
-    res = [x for x in count.items() if x[1] > 1]
+    res = [x for x in count.items() if x[1] > 1 and x[0].strip()]
     res.sort(key = lambda x:-x[1])
     #for w, n in res:
     #    print w, n, type(w)
