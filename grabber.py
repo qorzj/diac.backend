@@ -5,7 +5,7 @@ import web
 
 def translate_baidu(word):
     count = web.utils.counter()
-    params = "from=en&to=zh&query=%s&transtype=realtime&simple_means_flag=3" % urllib.quote(word)
+    params = "from=en&to=zh&query=%s&transtype=realtime&simple_means_flag=3" % word
     headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
     httpClient = httplib.HTTPConnection("fanyi.baidu.com", 80, timeout=10)
     httpClient.request("POST", "/v2transapi", params, headers)
@@ -17,13 +17,13 @@ def translate_baidu(word):
     httpClient.close()
 
     obj = json.loads(text)
-    json_text_double = obj['liju_result']['double']
+    json_text_double = obj['liju_result'].get('double', '')
 
     trans_result = obj['trans_result']['data'][0]['dst']
     count.add(trans_result)
     count.add(trans_result)
 
-    tag_result = obj['liju_result']['tag']
+    tag_result = obj['liju_result'].get('tag', [])
     for tag in tag_result:
         count.add(tag)
         count.add(tag)
