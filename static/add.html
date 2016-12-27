@@ -63,6 +63,9 @@
 </body>
 <script>
 function init() {
+    if (localStorage.token) {
+        $('#loginForm').hide();
+    }
     var param = urllib.param();
     $("#word").val(param.word);
     $("#context").val(param.context);
@@ -73,7 +76,7 @@ function addWord() {
         word: $("#word").val(),
         context: $("#context").val(),
         expl: $("#explain").val(),
-        token: sessionStorage.token
+        token: localStorage.token
     }, function(data) {
         alert("add word ok");
     });
@@ -87,7 +90,7 @@ function login() {
         } else {
             alert("login succeed");
             $('#loginForm').hide();
-            sessionStorage.token = data.token;
+            localStorage.token = data.token;
         }
     });
 }

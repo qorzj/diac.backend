@@ -93,6 +93,7 @@ ENV/
 
 # local script
 local.sh
-.avoscloud
 .DS_Store
 .avoscloud/
+.leancloud/
+.leanignore

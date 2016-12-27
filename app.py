@@ -19,7 +19,6 @@ class Home:
     def GET(self, text):
         text = diac_trim(text)
         ret = [x[0] for x in translate_baidu(text)]
-        web.header('Access-Control-Allow-Origin', '*')
         return '; '.join(ret)
 
 
@@ -103,10 +102,19 @@ class TestWord:
         return json.dumps({'code': 0})
 
 
+def all_wrapper(laber):
+    ret = laber()
+    web.header('Access-Control-Allow-Origin', '*')
+    if isinstance(ret, dict):
+        return json.dumps(ret)
+    return ret
+
+
 app.add_mapping("/btrans/(.+)", Home)
 app.add_mapping("/login", Login)
 app.add_mapping("/word/add", AddWord)
 app.add_mapping("/word/test", TestWord)
+app.add_processor(all_wrapper)
 
 
 if __name__ == "__main__":
