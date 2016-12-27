@@ -110,5 +110,5 @@ app.add_mapping("/word/test", TestWord)
 
 
 if __name__ == "__main__":
-    print app.request("/btrans/Real%20Madrid").data
+    print app.request("/btrans/satirised").data
     #app.run()
