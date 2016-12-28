@@ -78,7 +78,12 @@ function addWord() {
         expl: $("#explain").val(),
         token: localStorage.token
     }, function(data) {
-        alert("add word ok");
+        if (data.code === 0) {
+            alert("add word succeed");
+        } else {
+            alert("add word failed");
+            delete localStorage.token;
+        }
     });
 }
 function login() {

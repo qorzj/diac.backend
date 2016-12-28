@@ -106,6 +106,7 @@ def all_wrapper(laber):
     ret = laber()
     web.header('Access-Control-Allow-Origin', '*')
     if isinstance(ret, dict):
+        web.header('Content-Type', 'application/json')
         return json.dumps(ret)
     return ret
 
