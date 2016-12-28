@@ -32,9 +32,9 @@ class Login:
             user.login(username, password)
             token = user.get_session_token()
             web.setcookie('token', token)
-            return json.dumps({'code': 0, 'token': token})
+            return {'code': 0, 'token': token}
         except leancloud.errors.LeanCloudError:
-            return json.dumps({'code': 1})
+            return {'code': 1}
 
 
 class AddWord:
@@ -48,7 +48,7 @@ class AddWord:
             now = int(it.get('now', time.time()))
             user = User().become(token)
         except leancloud.errors.LeanCloudError:
-            return json.dumps({'code': 1})
+            return {'code': 1}
         delay = math.exp(math.log(30) / (user.get('avgGetCount') - 0.1)) * 86400
         recall_day = int((now + 8 * 3600 + delay) / 86400)
         obj = TryWords()
@@ -61,7 +61,7 @@ class AddWord:
         obj.set('recallDay', recall_day)
         obj.set('startTime', now)
         obj.save()
-        return json.dumps({'code': 0})
+        return {'code': 0}
 
 
 class TestWord:
@@ -74,7 +74,7 @@ class TestWord:
             now = int(it.get('now', time.time()))
             user = User().become(token)
         except leancloud.errors.LeanCloudError:
-            return json.dumps({'code': 1})
+            return {'code': 1}
         obj = TryWords.query.get(tryId)
         delay = obj.get('delay')
         tryCount = obj.get('tryCount')
@@ -91,7 +91,7 @@ class TestWord:
                 getObj.set('totalTime', now - obj.get('startTime'))
                 getObj.save()
                 obj.destroy()
-                return json.dumps({'code': 0})
+                return {'code': 0}
             delay *= math.exp(math.log(30) / (user.get('avgGetCount') - 0.1))
             delay = min(delay, 40 * 86400)
         recall_day = int((now + 8 * 3600 + delay) / 86400)
@@ -99,7 +99,7 @@ class TestWord:
         obj.set('tryCount', tryCount + 1)
         obj.set('recallDay', recall_day)
         obj.save()
-        return json.dumps({'code': 0})
+        return {'code': 0}
 
 
 def all_wrapper(laber):
