@@ -102,24 +102,27 @@ class TestWord:
         return {'code': 0}
 
 
-def ListWord:
+class ListWord:
     def GET(self):
         it = web.input()
         try:
             now = int(it.get('now', time.time()))
+            token = it.get('token')
             user = User().become(token)
         except leancloud.errors.LeanCloudError:
             return {'code': 1}
         today = int((now + 8 * 3600) / 86400)
         cnt = TryWords.query.less_than_or_equal_to("recallDay", today).count()
         if cnt > 0:
-            obj = TryWords.query.less_than_or_equal_to("recallDay", today).limit(1)[0]
+            obj = TryWords.query.less_than_or_equal_to("recallDay", today).limit(1).first()
             return {"code": 0,
                     "count": cnt,
+                    "testId": obj.id,
                     "word": obj.get("word"),
                     "context": obj.get("context"),
                     "explain": obj.get("expl"),
                     "tryCount": obj.get("tryCount"),
+                    "delay": obj.get("delay"),
                     }
         else:
             return {"code": 0, "count": cnt}
