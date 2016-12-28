@@ -102,6 +102,29 @@ class TestWord:
         return {'code': 0}
 
 
+def ListWord:
+    def GET(self):
+        it = web.input()
+        try:
+            now = int(it.get('now', time.time()))
+            user = User().become(token)
+        except leancloud.errors.LeanCloudError:
+            return {'code': 1}
+        today = int((now + 8 * 3600) / 86400)
+        cnt = TryWords.query.less_than_or_equal_to("recallDay", today).count()
+        if cnt > 0:
+            obj = TryWords.query.less_than_or_equal_to("recallDay", today).limit(1)[0]
+            return {"code": 0,
+                    "count": cnt,
+                    "word": obj.get("word"),
+                    "context": obj.get("context"),
+                    "explain": obj.get("expl"),
+                    "tryCount": obj.get("tryCount"),
+                    }
+        else:
+            return {"code": 0, "count": cnt}
+
+
 def all_wrapper(laber):
     ret = laber()
     web.header('Access-Control-Allow-Origin', '*')
@@ -115,6 +138,7 @@ app.add_mapping("/btrans/(.+)", Home)
 app.add_mapping("/login", Login)
 app.add_mapping("/word/add", AddWord)
 app.add_mapping("/word/test", TestWord)
+app.add_mapping("/word/list", ListWord)
 app.add_processor(all_wrapper)
 
 
