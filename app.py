@@ -21,9 +21,9 @@ class Home:
     def GET(self):
         it = web.input()
         text = it.get('text', '')
-        text = diac_trim(text)
+        puretext = diac_trim(text)
         context = it.get('context', '')
-        ret = ['<a href="https://diac.leanapp.cn/static/add.html?word=%s&context=%s&explain=%s" target="_blank">%s</a>' % (text, context, x[0], x[0]) for x in translate_baidu(text)]
+        ret = ['<a href="https://diac.leanapp.cn/static/add.html?word=%s&context=%s&explain=%s" target="_blank">%s</a>' % (text, context, x[0], x[0]) for x in translate_baidu(puretext)]
         return '; '.join(ret)
 
 

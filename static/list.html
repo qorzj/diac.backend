@@ -16,9 +16,22 @@
         <div class="row" style="margin-top:60px;font-size:24px">
             <div class="col s2"></div>
             <div class="col s8">
-                <div><small>context: </small><span id="context"></span></div>
-                <div><small>explain: </small><span id="explain"></span></div>
-                <div><small>hint: </small><span id="hint"></span></div>
+                <div style="margin-top:20px"><small>context: </small><span id="context"></span></div>
+                <div style="margin-top:20px"><small>explain: </small><span id="explain"></span></div>
+                <div style="margin-top:20px"><small>hint: </small><span id="hint"></span></div>
+                <div class="input-field col s9" style="margin-top:20px" id="testInput">
+                    <input placeholder="" id="answer" type="text" class="validate" style="font-size:24px" OnKeyDown="return checkdown(event) && true;" OnKeyUp="return checkup(event) && true;">
+                    <label for="answer">answer</label>
+                </div>
+                <div class="row">&nbsp;</div>
+                <div class="row" id="btnsWhenWrong" style="display:none">
+                    <a class="waves-effect waves-light btn">确实不会</a>
+                    <a class="waves-effect waves-light btn" style="margin-left: 100px">失误了</a>
+                </div>
+                <div class="row" id="btnsWhenRight" style="display:none">
+                    <a class="waves-effect waves-light btn">猜对的</a>
+                    <a class="waves-effect waves-light btn" style="margin-left: 100px">确实记住了</a>
+                </div>
             </div>
         </div>
     </div>
@@ -32,7 +45,44 @@ function init() {
         $("#explain").html(data.explain);
         $("#hint").html(data.hint);
         testId = data.testId;
-        ans = data.word;
+        ans = getPureWord(data.word);
+    });
+}
+function checkdown(e)
+{
+    if (!e) e = window.event;
+    var key = e.which ? e.which : e.keyCode;
+    return true;
+}
+function checkup(e) {
+    var fulltext = $("#answer").val();
+    var pureFulltext = getPureWord(fulltext);
+    if (pureFulltext.length >= ans.length) {
+        if (pureFulltext === ans) {
+            $("#btnsWhenRight").show();
+        } else {
+            $("#btnsWhenWrong").show();
+        }
+        $("#testInput").hide();
+    }
+}
+function getPureWord(s) {
+    var ans = '';
+    s = s.toLowerCase();
+    for (let c of s) {
+        if ('a' <= c && c <= 'z') {
+            ans += c;
+        }
+    }
+    return ans;
+}
+function submitTest(grade) {
+    $.post('https://diac.leanapp.cn/word/test', {
+        grade: grade,
+        token: localStorage.token,
+        tryId: testId,
+    }, function(data) {
+        
     });
 }
 
