@@ -4,7 +4,9 @@ import time
 import web
 import leancloud
 from leancloud import User
+
 from grabber import translate_baidu
+from util import get_hint
 
 app = web.application()
 TryWords = leancloud.Object.extend('TryWords')
@@ -118,14 +120,16 @@ class ListWord:
         cnt = TryWords.query.less_than_or_equal_to("recallDay", today).count()
         if cnt > 0:
             obj = TryWords.query.less_than_or_equal_to("recallDay", today).limit(1).first()
+            hint = get_hint(obj.get("word"))
             return {"code": 0,
                     "count": cnt,
                     "testId": obj.id,
-                    "word": obj.get("word"),
+                    "word": obj.get("word").lower(),
                     "context": obj.get("context"),
                     "explain": obj.get("expl"),
                     "tryCount": obj.get("tryCount"),
                     "delay": obj.get("delay"),
+                    "hint": hint,
                     }
         else:
             return {"code": 0, "count": cnt}
