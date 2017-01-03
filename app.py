@@ -16,9 +16,12 @@ def diac_trim(text):
 
 
 class Home:
-    def GET(self, text):
+    def GET(self):
+        it = web.input()
+        text = it.get('text', '')
         text = diac_trim(text)
-        ret = [x[0] for x in translate_baidu(text)]
+        context = it.get('context', '')
+        ret = ['<a href="https://diac.leanapp.cn/static/add.html?word=%s&context=%s&explain=%s" target="_blank">%s</a>' % (text, context, x[0], x[0]) for x in translate_baidu(text)]
         return '; '.join(ret)
 
 
@@ -137,7 +140,7 @@ def all_wrapper(laber):
     return ret
 
 
-app.add_mapping("/btrans/(.+)", Home)
+app.add_mapping("/btrans", Home)
 app.add_mapping("/login", Login)
 app.add_mapping("/word/add", AddWord)
 app.add_mapping("/word/test", TestWord)
