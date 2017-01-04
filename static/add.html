@@ -41,7 +41,9 @@
                         </div>
                     </div>
                 </form>
-                    <div class="row"><br><hr></div>
+                    <div class="row" id="testlink">
+                    </div>
+                    <div class="row"><a href="javascript:parent.window.close()">[ X ] Close</a><br><hr></div>
                 <form id="loginForm" onsubmit="return login() || false">
                     <div class="row">
                         <div class="input-field col s4">
@@ -70,6 +72,13 @@ function init() {
     $("#word").val(param.word);
     $("#context").val(param.context);
     $("#explain").val(param.explain);
+    $.get('https://diac.leanapp.cn/word/list?token='+localStorage.token, null, function(data) {
+        if (data.code === 0 && data.count > 0) {
+            $("#testlink").html('<a href="list.html" target="_blank"><span class="new badge">'+data.count+'</span></a>');
+        } else {
+            $("#testlink").html('<span class="new badge">'+data.count+'</span>');
+        }
+    });
 }
 function addWord() {
     $.post('https://diac.leanapp.cn/word/add', {
@@ -80,6 +89,7 @@ function addWord() {
     }, function(data) {
         if (data.code === 0) {
             alert("add word succeed");
+            parent.window.close();
         } else {
             alert("add word failed");
             delete localStorage.token;

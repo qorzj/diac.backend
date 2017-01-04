@@ -25,12 +25,12 @@
                 </div>
                 <div class="row">&nbsp;</div>
                 <div class="row" id="btnsWhenWrong" style="display:none">
-                    <a class="waves-effect waves-light btn">确实不会</a>
-                    <a class="waves-effect waves-light btn" style="margin-left: 100px">失误了</a>
+                    <a class="waves-effect waves-light btn" onclick="submitTest('c')">确实不会</a>
+                    <a class="waves-effect waves-light btn" onclick="submitTest('b')" style="margin-left: 100px">失误了</a>
                 </div>
                 <div class="row" id="btnsWhenRight" style="display:none">
-                    <a class="waves-effect waves-light btn">猜对的</a>
-                    <a class="waves-effect waves-light btn" style="margin-left: 100px">确实记住了</a>
+                    <a class="waves-effect waves-light btn" onclick="submitTest('b')">猜对的</a>
+                    <a class="waves-effect waves-light btn" onclick="submitTest('a')" style="margin-left: 100px">确实记住了</a>
                 </div>
             </div>
         </div>
@@ -41,11 +41,22 @@ var testId;
 var ans;
 function init() {
     $.get('https://diac.leanapp.cn/word/list?token='+localStorage.token, null, function(data) {
+        if (data.code !== 0) {
+            alert("error!");
+            parent.window.close();
+            return;
+        }
+        if (data.count === 0) {
+            alert("no words left");
+            parent.window.close();
+            return;
+        }
         $("#context").html(data.context);
         $("#explain").html(data.explain);
         $("#hint").html(data.hint);
         testId = data.testId;
         ans = getPureWord(data.word);
+        $("#answer").focus();
     });
 }
 function checkdown(e)
@@ -82,7 +93,8 @@ function submitTest(grade) {
         token: localStorage.token,
         tryId: testId,
     }, function(data) {
-        
+        alert("ok, go to next...");
+        location.href = '';
     });
 }
 
