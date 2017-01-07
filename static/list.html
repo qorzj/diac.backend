@@ -74,6 +74,7 @@ function checkup(e) {
         } else {
             $("#btnsWhenWrong").show();
         }
+        $("#hint").html($("#hint").html() + " | " + ans);
         $("#testInput").hide();
     }
 }
